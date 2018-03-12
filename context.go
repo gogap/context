@@ -40,7 +40,19 @@ func NewContext() Context {
 func (p *defaultContext) WithValue(key, val interface{}) {
 	p.loc.Lock()
 	p.ctx = context.WithValue(p.ctx, key, val)
-	p.keys = append(p.keys, key)
+
+	found := false
+	for _, k := range p.keys {
+		if k == key {
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		p.keys = append(p.keys, key)
+	}
+
 	p.loc.Unlock()
 }
 
